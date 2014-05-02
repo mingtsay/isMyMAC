@@ -1,3 +1,4 @@
 {
-  "command": "/sbin/arp -a"
+  "port": "3000",
+  "command": "arp -a"
 }
