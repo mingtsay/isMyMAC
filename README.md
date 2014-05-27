@@ -31,7 +31,7 @@
 # English version
 
 ## Why this thing exists?
-This is mmainly for establishing a network white-list without the necessity of manual checking each of the machine’s IP & MAC ADDRESS during the period of #congressoccupied
+This is mainly for establishing a network white-list without the necessity of manual checking each of the machine’s IP & MAC ADDRESS during the period of #congressoccupied
 
 ## What can this thing do?
 It can be used for checking your IP & MAC Address through a webpage under LAN.
