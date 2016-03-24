@@ -1,50 +1,31 @@
-/*
- * Module dependencies.
- */
+'use strict';
+const http = require('http');
+const port = process.argv[2] || 3000;
+const cmd = process.argv[3] || 'arp -a';
+const exec = require('child_process').exec;
 
-var express = require('express'),
-    http = require('http'),
-    path = require('path');
+const server = http.createServer((req, res) => {
+  exec(cmd, (err, stdin, stdout) => {
+    if (err) {
+      res.writeHead(500, {'Content-Type': 'application/json'});
+      res.end();
+    } else {
+      let data = {
+        ip: req.connection.remoteAddress ? req.connection.remoteAddress.replace(/^.*:/, '') : null,
+        mac: null
+      };
 
-var app = module.exports = express(),
-    config = require('./config.json');
+      stdin.split('\n').forEach((i) => {
+        let regex = /([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])/
+        if (i.match(data.ip) && i.match(regex)) data.mac = i.match(regex)[0];
+      });
 
-// Configuration
-app.configure(function () {
-  app.set('port', process.env.PORT || config.port);
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-});
-
-// Router
-app.get('/', function (req, res) {
-  var exec = require('child_process').exec;
-  var child = exec(config.command, function (err, stdout) {
-    if (err !== null) {
-      console.log('[ERROR] ' + err);
-    }
-    var ip = '(' + req.ip + ')';
-    stdout = stdout.split("\n");
-    for (var stdkey in stdout) {
-      var host = stdout[stdkey].split(" ");
-      for (var hostkey in host) {
-        if (ip === host[hostkey]) {
-          var ans = host[3];
-        }
-      }
-    }
-    if (!ans) {
-      var ans = 'notfound';
-    }
-
-    res.json({
-      result: [req.ip, ans]
-    });
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.end(JSON.stringify(data));
+    };
   });
 });
 
-http.createServer(app).listen(app.get('port'), function () {
-  console.log("isMyMAC server listening on port " + app.get('port'));
+server.listen(port, () => {
+  console.log('isMyMAC listening on port ' + port);
 });
