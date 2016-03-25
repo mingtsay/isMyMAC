@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
       res.end();
     } else {
       let data = {
-        ip: req.connection.remoteAddress ? req.connection.remoteAddress.replace(/^.*:/, '') : null,
+        ip: req.connection.remoteAddress ? req.connection.remoteAddress.match(/(\d{1,3}\.){3}(\d{1,3})/)[0] : null,
         mac: null
       };
 
