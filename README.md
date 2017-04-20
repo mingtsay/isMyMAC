@@ -1,4 +1,4 @@
-#isMyMAC
+# isMyMAC
 this is mainly for establishing a network white-list without the necessity of manual checking each of the machine’s IP & MAC ADDRESS during the period of #congressoccupied
 
 ## Usage
